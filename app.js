@@ -13,6 +13,7 @@ app.use(bodyParser())
 
 // 引入users.js
 const users = require('./routes/api/users')
+const notes = require('./routes/api/notes')
 
 // 路由
 router.get('/', async ctx => {
@@ -30,6 +31,7 @@ mongoose.connect(mongoURI, { useNewUrlParser: true })
 
 // 配置路由地址 /api/users
 router.use('/api/users', users)
+router.use('/api/notes', notes)
 
 // 配置路由
 app.use(router.routes())

@@ -35,7 +35,7 @@ router.post('/register', async ctx => {
 			password: ctx.request.body.password
 		})
 
-		await bcrypt.genSalt(10, (err, salt) => {
+		bcrypt.genSalt(10, (err, salt) => {
 			bcrypt.hash(newUser.password, salt, (err, hash) => {
 				if (err) throw err
 				newUser.password = hash
@@ -44,7 +44,7 @@ router.post('/register', async ctx => {
 
 		// console.log(newUser)
 		// 存储到数据库
-		await newUser.save()
+		newUser.save()
 			.then((user) => {
 				console.log(newUser)
 				// 成功后返回JSON数据
@@ -54,6 +54,8 @@ router.post('/register', async ctx => {
 				console.log(err)
 			})
 		ctx.body = newUser
+
+
 	}
 })
 
