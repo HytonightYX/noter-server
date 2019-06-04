@@ -35,6 +35,57 @@ router.post('/add', async ctx => {
 		})
 })
 
-router.get('/:id')
+/**
+ * @route GET api/notes
+ * @desc 获取所有笔记
+ * @access 接口是公开的
+ */
+router.get('/', async ctx => {
+	await Note
+		.find({})
+		.then((list) => {
+			ctx.body = list
+		})
+		.catch((err) => {
+			console.log(err)
+		})
+})
+
+/**
+ * @route GET api/notes/id
+ * @desc 根据id获取笔记详情
+ * @access 接口是公开的
+ */
+router.get('/:id', async ctx => {
+	await Note
+		.findById(ctx.params.id)
+		.then((note) => {
+			ctx.body = note
+		})
+		.catch((err) => {
+			console.log(err)
+		})
+})
+
+/**
+ * @route PATCH api/notes
+ * @desc 根据id获取笔记详情
+ * @param {id, text}
+ * @access 接口是公开的
+ */
+router.patch('/', async ctx => {
+	console.log(ctx.request.body.text)
+	await Note.updateOne(
+		{_id: ctx.request.body.id}, {text: ctx.request.body.text, updated: new Date()}, {multi: false},
+		)
+		.then((res) => {
+			console.log(res)
+			ctx.status = 200
+			ctx.body = res
+		})
+		.catch((err) => {
+			console.log(err)
+			})
+})
 
 module.exports = router.routes()

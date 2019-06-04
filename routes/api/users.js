@@ -54,8 +54,6 @@ router.post('/register', async ctx => {
 				console.log(err)
 			})
 		ctx.body = newUser
-
-
 	}
 })
 

@@ -22,6 +22,9 @@ const NoteSchema = new Schema({
 	cover_url: {
 		type: String,
 	},
+	description: {
+		type: String
+	},
 	updated: {
 		type: Date,
 		default: Date.now
