@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 // 实例化数据模型
 const UserSchema = new Schema({
-	name: {
+	username: {
 		type: String,
 		required: true
 	},
@@ -16,7 +16,7 @@ const UserSchema = new Schema({
 		type: String,
 		required: true
 	},
-	avatar: {
+	avatar_url: {
 		type: String,
 	},
 	date: {

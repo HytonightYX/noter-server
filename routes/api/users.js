@@ -15,6 +15,10 @@ router.get('/test', async ctx => {
 	ctx.body ={msg: "users works"}
 })
 
+router.get('/:id/login', async ctx => {
+	console.log(ctx.params.id)
+})
+
 /**
  * @route POST api/users/register
  * @desc 测试接口地址
@@ -30,7 +34,7 @@ router.post('/register', async ctx => {
 	} else {
 		// 实例化一个新的user
 		const newUser = new User({
-			name: ctx.request.body.name,
+			username: ctx.request.body.username,
 			email: ctx.request.body.email,
 			password: ctx.request.body.password
 		})
