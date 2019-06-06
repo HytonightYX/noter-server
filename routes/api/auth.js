@@ -4,6 +4,9 @@ const User = require('../../models/User')
 const axios = require('axios')
 const Auth_github = require('../../config/keys').Auth_github
 
+/**
+ * 测试接口
+ */
 router.get('/test', async ctx => {
 	ctx.status = 200
 	ctx.body = {msg: 'auth works'}
@@ -32,7 +35,7 @@ router.get('/callback', async (ctx, next) => {//这是一个授权回调，用�
 
 	await User.findOne({email: userInfo.email}, async (err, oldusers) => {
 		if (oldusers) {
-			ctx.cookies.set('userid', oldusers._id)
+			ctx.cookies.set('userid', oldusers._id, {httpOnly: false})
 			ctx.cookies.set('auth_token', res_token.data)
 			ctx.cookies.set('userAvatar', userInfo.avatar_url)
 			ctx.cookies.set('username', userInfo.login)
@@ -53,7 +56,7 @@ router.get('/callback', async (ctx, next) => {//这是一个授权回调，用�
 					const newId = savedUser._id
 					console.log('创建新用户成功' + newId)
 					console.log(savedUser)
-					ctx.cookies.set('userid', newId)
+					ctx.cookies.set('userid', newId, {httpOnly: false})
 					ctx.cookies.set('auth_token', res_token.data)
 					ctx.cookies.set('userAvatar', savedUser.avatar_url)
 					ctx.cookies.set('username', savedUser.username)

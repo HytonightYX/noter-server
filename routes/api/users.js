@@ -15,6 +15,17 @@ router.get('/test', async ctx => {
 	ctx.body ={msg: "users works"}
 })
 
+/**
+ * @route GET api/users/:id
+ * @desc 根据id获取用户详情
+ */
+router.get('/:id', async ctx => {
+	await User.findById(ctx.params.id)
+		.then((user) => {
+			ctx.body = user
+		})
+})
+
 router.get('/:id/login', async ctx => {
 	console.log(ctx.params.id)
 })
