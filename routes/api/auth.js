@@ -27,11 +27,12 @@ router.get('/callback', async (ctx, next) => {//这是一个授权回调，用�
 
 	// 带着 token 从 GitHub 获取用户信息
 	const github_API_userInfo = await axios.get(`https://api.github.com/user?access_token=${token}`)
-		console.log('github 用户 API：', github_API_userInfo.data)
+		// console.log('github 用户 API：', github_API_userInfo.data)
 	const userInfo = github_API_userInfo.data
 
 	await User.findOne({email: userInfo.email}, async (err, oldusers) => {
 		if (oldusers) {
+			ctx.cookies.set('userid', oldusers._id)
 			ctx.cookies.set('auth_token', res_token.data)
 			ctx.cookies.set('userAvatar', userInfo.avatar_url)
 			ctx.cookies.set('username', userInfo.login)
@@ -47,16 +48,18 @@ router.get('/callback', async (ctx, next) => {//这是一个授权回调，用�
 				avatar_url: userInfo.avatar_url
 			})
 
-			newUser.save((err,savedUser)=>{
+			await newUser.save((err,savedUser)=>{
 				if(savedUser){
-					console.log('创建新用户成功')
+					const newId = savedUser._id
+					console.log('创建新用户成功' + newId)
+					console.log(savedUser)
+					ctx.cookies.set('userid', newId)
+					ctx.cookies.set('auth_token', res_token.data)
+					ctx.cookies.set('userAvatar', savedUser.avatar_url)
+					ctx.cookies.set('username', savedUser.username)
+					ctx.cookies.set('email', savedUser.email)
 				}
 			})
-
-			ctx.cookies.set('auth_token', res_token.data)
-			ctx.cookies.set('userAvatar', userInfo.avatar_url)
-			ctx.cookies.set('username', userInfo.login)
-			ctx.cookies.set('email', userInfo.email)
 			ctx.response.redirect('http://localhost:3000')
 		}
 	})
