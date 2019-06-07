@@ -100,4 +100,14 @@ router.get('/owner/:ownerId', async ctx => {
 	})
 })
 
+/**
+ * 根据id将del标记置1
+ */
+router.delete('/:id', async ctx => {
+	await Note.findByIdAndDelete(ctx.params.id)
+		.then((note) => {
+			ctx.body = note
+		})
+})
+
 module.exports = router.routes()
