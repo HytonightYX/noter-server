@@ -17,21 +17,24 @@ router.get('/test', async ctx => {
  * @desc 添加笔记
  * @access 接口是公开的
  */
-router.post('/add', async ctx => {
-	const user = await User.findById(ctx.request.body.owner)
+router.post('/', async ctx => {
 	const newNote = new Note({
+		title: ctx.request.body.title,
 		text: ctx.request.body.text,
-		owner: user,
+		description: ctx.request.body.description,
+		owner: ctx.request.body.owner,
 	})
 
-	newNote.save()
+	await newNote.save()
 		.then((note) => {
 			console.log(note)
 			// 成功后返回JSON数据
-			ctx.body = note
+			ctx.body = {ok: 1}
+			ctx.status = 200
 		})
 		.catch((err) => {
 			console.log(err)
+			ctx.body = {ok: 0}
 		})
 })
 
@@ -74,9 +77,8 @@ router.get('/:id', async ctx => {
  * @access 接口是公开的
  */
 router.patch('/', async ctx => {
-	console.log(ctx.request.body.text)
 	await Note.updateOne(
-		{_id: ctx.request.body.id}, {text: ctx.request.body.text, updated: new Date()}, {multi: false},
+		{_id: ctx.request.body.id}, {text: ctx.request.body.text,title: ctx.request.body.title ,updated: new Date()}, {multi: false},
 		)
 		.then((res) => {
 			console.log(res)
@@ -86,6 +88,16 @@ router.patch('/', async ctx => {
 		.catch((err) => {
 			console.log(err)
 			})
+})
+
+/**
+ * 根据所有者id获取他的所有笔记
+ */
+router.get('/owner/:ownerId', async ctx => {
+	console.log(ctx.params.ownerId);
+	await Note.find({owner: ctx.params.ownerId}).then((users) => {
+		ctx.body = users
+	})
 })
 
 module.exports = router.routes()
