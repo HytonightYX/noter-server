@@ -33,39 +33,38 @@ router.get('/callback', async (ctx, next) => {//这是一个授权回调，用�
 		// console.log('github 用户 API：', github_API_userInfo.data)
 	const userInfo = github_API_userInfo.data
 
-	await User.findOne({email: userInfo.email}, async (err, oldusers) => {
-		if (oldusers) {
-			ctx.cookies.set('userid', oldusers._id, {httpOnly: false})
-			ctx.cookies.set('auth_token', res_token.data)
-			ctx.cookies.set('userAvatar', userInfo.avatar_url)
-			ctx.cookies.set('username', userInfo.login)
-			ctx.cookies.set('email', userInfo.email)
+	const oldUser = await User.findOne({email: userInfo.email})
 
-			ctx.response.redirect('http://localhost:3000') // 从GitHub的登录跳转回我们的客户端页面
-			return;
-		} else {
-			const newUser = new User({
-				username: userInfo.login,
-				email: userInfo.email,
-				password: '123456a',
-				avatar_url: userInfo.avatar_url
-			})
-
-			await newUser.save((err,savedUser)=>{
+	if (oldUser) {
+		console.log(oldUser)
+		ctx.cookies.set('userid', oldUser._id, {httpOnly: false})
+		ctx.cookies.set('auth_token', res_token.data)
+		ctx.response.redirect('http://localhost:3000')
+	} else {
+		const newUser = new User({
+			username: userInfo.login,
+			email: userInfo.email,
+			password: '123456a',
+			avatar_url: userInfo.avatar_url
+		})
+		await newUser.save()
+			.then(async (savedUser) => {
 				if(savedUser){
 					const newId = savedUser._id
 					console.log('创建新用户成功' + newId)
 					console.log(savedUser)
 					ctx.cookies.set('userid', newId, {httpOnly: false})
 					ctx.cookies.set('auth_token', res_token.data)
-					ctx.cookies.set('userAvatar', savedUser.avatar_url)
-					ctx.cookies.set('username', savedUser.username)
-					ctx.cookies.set('email', savedUser.email)
 				}
+			}).then(() => {
+				ctx.response.redirect('http://localhost:3000')
 			})
-			ctx.response.redirect('http://localhost:3000')
-		}
-	})
+			.catch(
+				err => {
+					console.log(err)
+				}
+			)
+	}
 })
 
 module.exports = router.routes()
