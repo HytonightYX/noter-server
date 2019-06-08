@@ -1,15 +1,12 @@
-// const auth = require('auth')
 const Koa = require('koa')
 const Router = require('koa-router')
 const mongoose = require('mongoose')
 const bodyParser = require('koa-bodyparser');
 const mongoURI = require('./config/keys').mongoURI
 const cors = require('koa2-cors');
-const axios = require('axios')
-const port = process.env.PORT || 3030
+const port = process.env.PORT || 3035
 const app = new Koa()
 const router = new Router()
-
 
 // middleware
 app.use(bodyParser())

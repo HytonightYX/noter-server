@@ -10,7 +10,6 @@ const UserSchema = new Schema({
 	},
 	email: {
 		type: String,
-		required: true
 	},
 	password: {
 		type: String,
@@ -22,6 +21,10 @@ const UserSchema = new Schema({
 	date: {
 		type: Date,
 		default: Date.now
+	},
+	github_id: {
+		type: String,
+		required: true
 	}
 })
 

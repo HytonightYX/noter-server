@@ -32,20 +32,24 @@ router.get('/callback', async (ctx, next) => {//这是一个授权回调，用�
 	const github_API_userInfo = await axios.get(`https://api.github.com/user?access_token=${token}`)
 		// console.log('github 用户 API：', github_API_userInfo.data)
 	const userInfo = github_API_userInfo.data
+	console.log('token' + token)
 
-	const oldUser = await User.findOne({email: userInfo.email})
+	console.log('拿到的数据', userInfo.id)
+
+	const oldUser = await User.findOne({github_id: userInfo.id})
 
 	if (oldUser) {
-		console.log(oldUser)
+		console.log('存在该用户' + oldUser)
 		ctx.cookies.set('userid', oldUser._id, {httpOnly: false})
 		ctx.cookies.set('auth_token', res_token.data)
-		ctx.response.redirect('http://localhost:3000')
+		ctx.response.redirect('http://47.99.215.152:3000/noter/')
 	} else {
 		const newUser = new User({
 			username: userInfo.login,
-			email: userInfo.email,
+			email: userInfo.email ? userInfo.email : '',
 			password: '123456a',
-			avatar_url: userInfo.avatar_url
+			avatar_url: userInfo.avatar_url,
+			github_id: userInfo.id
 		})
 		await newUser.save()
 			.then(async (savedUser) => {
@@ -57,7 +61,7 @@ router.get('/callback', async (ctx, next) => {//这是一个授权回调，用�
 					ctx.cookies.set('auth_token', res_token.data)
 				}
 			}).then(() => {
-				ctx.response.redirect('http://localhost:3000')
+				ctx.response.redirect('http://47.99.215.152:3000/noter/')
 			})
 			.catch(
 				err => {
