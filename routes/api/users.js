@@ -26,8 +26,16 @@ router.get('/:id', async ctx => {
 		})
 })
 
-router.get('/:id/login', async ctx => {
-	console.log(ctx.params.id)
+/**
+ * 根据传入新user修改用户信息
+ */
+router.patch('/:id', async ctx => {
+	console.log('待修改:' + ctx.params.id)
+	console.log(ctx.request.body)
+	await User.findByIdAndUpdate(ctx.params.id, ctx.request.body, {new: true})
+		.then((user) => {
+			ctx.body = user
+		})
 })
 
 /**
