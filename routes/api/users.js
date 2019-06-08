@@ -27,11 +27,10 @@ router.get('/:id', async ctx => {
 })
 
 /**
- * 根据传入新user修改用户信息
+ * @route PATCH api/users/:id
+ * @desc 根据传入新user修改用户信息
  */
 router.patch('/:id', async ctx => {
-	console.log('待修改:' + ctx.params.id)
-	console.log(ctx.request.body)
 	await User.findByIdAndUpdate(ctx.params.id, ctx.request.body, {new: true})
 		.then((user) => {
 			ctx.body = user
@@ -40,7 +39,7 @@ router.patch('/:id', async ctx => {
 
 /**
  * @route POST api/users/register
- * @desc 测试接口地址
+ * @desc 新用户注册
  * @access 接口是公开的
  */
 router.post('/register', async ctx => {

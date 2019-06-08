@@ -13,7 +13,7 @@ router.get('/test', async ctx => {
 })
 
 /**
- * @route POST api/notes/add
+ * @route POST api/notes
  * @desc 添加笔记
  * @access 接口是公开的
  */
@@ -91,7 +91,8 @@ router.patch('/', async ctx => {
 })
 
 /**
- * 根据所有者id获取他的所有笔记
+ * @route GET api/notes/:id
+ * @desc 根据所有者id获取他的所有笔记
  */
 router.get('/owner/:ownerId', async ctx => {
 	console.log(ctx.params.ownerId);
@@ -101,7 +102,8 @@ router.get('/owner/:ownerId', async ctx => {
 })
 
 /**
- * 根据id将del标记置1
+ * @route DELETE api/notes/:id
+ * @desc 根据id删除笔记
  */
 router.delete('/:id', async ctx => {
 	await Note.findByIdAndDelete(ctx.params.id)

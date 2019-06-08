@@ -32,9 +32,6 @@ router.get('/callback', async (ctx, next) => {//这是一个授权回调，用�
 	const github_API_userInfo = await axios.get(`https://api.github.com/user?access_token=${token}`)
 		// console.log('github 用户 API：', github_API_userInfo.data)
 	const userInfo = github_API_userInfo.data
-	console.log('token' + token)
-
-	console.log('拿到的数据', userInfo.id)
 
 	const oldUser = await User.findOne({github_id: userInfo.id})
 
